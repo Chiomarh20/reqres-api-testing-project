@@ -1,16 +1,15 @@
 import { test, expect } from '@playwright/test';
+import { loginData } from '../test-data/auth-data.js';
 
 test.describe('Authentication API - Login', () => {
 
   test('should login successfully with valid credentials', async ({ request }) => {
     const response = await request.post('/api/login', {
-      data: {
-        email: 'eve.holt@reqres.in',
-        password: 'cityslicka'
-      }
+      data: loginData.valid
     });
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -22,9 +21,7 @@ test.describe('Authentication API - Login', () => {
 
   test('should reject login when password is missing', async ({ request }) => {
     const response = await request.post('/api/login', {
-      data: {
-        email: 'eve.holt@reqres.in'
-      }
+      data: loginData.missingPassword
     });
 
     expect(response.status()).toBe(400);
@@ -38,9 +35,7 @@ test.describe('Authentication API - Login', () => {
 
   test('should reject login when email is missing', async ({ request }) => {
     const response = await request.post('/api/login', {
-      data: {
-        password: 'cityslicka'
-      }
+      data: loginData.missingEmail
     });
 
     expect(response.status()).toBe(400);
@@ -54,10 +49,7 @@ test.describe('Authentication API - Login', () => {
 
   test('should reject login with invalid credentials', async ({ request }) => {
     const response = await request.post('/api/login', {
-      data: {
-        email: 'invalid@example.com',
-        password: 'wrongpassword'
-      }
+      data: loginData.invalidCredentials
     });
 
     expect(response.status()).toBe(400);
@@ -73,11 +65,16 @@ test.describe('Authentication API - Login', () => {
     const response = await request.post('/api/login', {
       data: {
         email: 'invalid-email',
-        password: 'cityslicka'
+        password: loginData.valid.password
       }
     });
 
-    expect([400, 401]).toContain(response.status());
+    expect(response.status()).toBe(400);
+
+    const responseBody = await response.json();
+
+    expect(responseBody).toHaveProperty('error');
+    expect(responseBody.error).toBeTruthy();
   });
 
 
@@ -91,6 +88,7 @@ test.describe('Authentication API - Login', () => {
     const responseBody = await response.json();
 
     expect(responseBody).toHaveProperty('error');
+    expect(responseBody.error).toBeTruthy();
   });
 
 
@@ -98,7 +96,7 @@ test.describe('Authentication API - Login', () => {
     const response = await request.post('/api/login', {
       data: {
         email: '',
-        password: 'cityslicka'
+        password: loginData.valid.password
       }
     });
 
@@ -107,13 +105,14 @@ test.describe('Authentication API - Login', () => {
     const responseBody = await response.json();
 
     expect(responseBody).toHaveProperty('error');
+    expect(responseBody.error).toBeTruthy();
   });
 
 
   test('should reject login with an empty password', async ({ request }) => {
     const response = await request.post('/api/login', {
       data: {
-        email: 'eve.holt@reqres.in',
+        email: loginData.valid.email,
         password: ''
       }
     });
@@ -123,6 +122,7 @@ test.describe('Authentication API - Login', () => {
     const responseBody = await response.json();
 
     expect(responseBody).toHaveProperty('error');
+    expect(responseBody.error).toBeTruthy();
   });
 
 });

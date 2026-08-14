@@ -17,11 +17,12 @@ test.describe('API Validation and Boundary Testing', () => {
   test('should handle a non-numeric pagination value', async ({ request }) => {
     const response = await request.get('/api/users?page=abc');
 
-    expect([200, 400]).toContain(response.status());
+    expect(response.status()).toBe(200);
 
     const responseBody = await response.json();
 
     expect(responseBody).toHaveProperty('data');
+    expect(Array.isArray(responseBody.data)).toBeTruthy();
   });
 
 
@@ -34,6 +35,7 @@ test.describe('API Validation and Boundary Testing', () => {
 
     expect(responseBody).toHaveProperty('data');
     expect(Array.isArray(responseBody.data)).toBeTruthy();
+    expect(responseBody.data.length).toBe(0);
   });
 
 
@@ -51,7 +53,7 @@ test.describe('API Validation and Boundary Testing', () => {
   test('should return valid content type for create user response', async ({ request }) => {
     const response = await request.post('/api/users', {
       data: {
-        name: 'Validation User',
+        name: 'Chioma',
         job: 'QA Tester'
       }
     });
@@ -71,9 +73,16 @@ test.describe('API Validation and Boundary Testing', () => {
 
     const responseBody = await response.json();
 
-    expect(responseBody.data).toBeInstanceOf(Array);
+    expect(responseBody).toHaveProperty('data');
+    expect(Array.isArray(responseBody.data)).toBeTruthy();
 
     for (const user of responseBody.data) {
+      expect(user).toHaveProperty('id');
+      expect(user).toHaveProperty('email');
+      expect(user).toHaveProperty('first_name');
+      expect(user).toHaveProperty('last_name');
+      expect(user).toHaveProperty('avatar');
+
       expect(typeof user.id).toBe('number');
       expect(typeof user.email).toBe('string');
       expect(typeof user.first_name).toBe('string');
@@ -92,6 +101,7 @@ test.describe('API Validation and Boundary Testing', () => {
 
     const responseBody = await response.json();
 
+    expect(responseBody).toHaveProperty('error');
     expect(responseBody.error).toBeTruthy();
   });
 
@@ -105,6 +115,7 @@ test.describe('API Validation and Boundary Testing', () => {
 
     const responseBody = await response.json();
 
+    expect(responseBody).toHaveProperty('error');
     expect(responseBody.error).toBeTruthy();
   });
 

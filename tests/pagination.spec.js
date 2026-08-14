@@ -6,6 +6,7 @@ test.describe('Users API - Pagination', () => {
     const response = await request.get('/api/users?page=1');
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -20,6 +21,7 @@ test.describe('Users API - Pagination', () => {
     const response = await request.get('/api/users?page=2');
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -30,10 +32,11 @@ test.describe('Users API - Pagination', () => {
   });
 
 
-  test('should return pagination metadata', async ({ request }) => {
+  test('should return valid pagination metadata', async ({ request }) => {
     const response = await request.get('/api/users?page=2');
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -46,6 +49,11 @@ test.describe('Users API - Pagination', () => {
     expect(typeof responseBody.per_page).toBe('number');
     expect(typeof responseBody.total).toBe('number');
     expect(typeof responseBody.total_pages).toBe('number');
+
+    expect(responseBody.page).toBeGreaterThan(0);
+    expect(responseBody.per_page).toBeGreaterThan(0);
+    expect(responseBody.total).toBeGreaterThan(0);
+    expect(responseBody.total_pages).toBeGreaterThan(0);
   });
 
 
@@ -53,6 +61,7 @@ test.describe('Users API - Pagination', () => {
     const response = await request.get('/api/users?page=999');
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -68,6 +77,7 @@ test.describe('Users API - Pagination', () => {
     const response = await request.get(`/api/users?page=${requestedPage}`);
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -79,6 +89,7 @@ test.describe('Users API - Pagination', () => {
     const response = await request.get('/api/users?page=2');
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 

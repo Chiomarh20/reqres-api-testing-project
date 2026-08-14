@@ -1,4 +1,4 @@
-node_modules/
 .env
-playwright-report/
+node_modules/
 test-results/
+playwright-report/

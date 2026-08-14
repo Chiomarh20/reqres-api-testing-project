@@ -4,7 +4,6 @@ test.describe('API Chaining Workflow', () => {
 
   test('should create a user and use the generated ID in a follow-up request', async ({ request }) => {
 
-    // Step 1: Create a user
     const createResponse = await request.post('/api/users', {
       data: {
         name: 'Chioma',
@@ -21,7 +20,8 @@ test.describe('API Chaining Workflow', () => {
 
     const userId = createdUser.id;
 
-    // Step 2: Use the generated ID in an update request
+    expect(userId).toBeTruthy();
+
     const updateResponse = await request.put(`/api/users/${userId}`, {
       data: {
         name: 'Chioma Updated',
@@ -41,10 +41,9 @@ test.describe('API Chaining Workflow', () => {
 
   test('should create a user and then delete the created user', async ({ request }) => {
 
-    // Step 1: Create
     const createResponse = await request.post('/api/users', {
       data: {
-        name: 'Test User',
+        name: 'Chioma',
         job: 'QA Tester'
       }
     });
@@ -57,43 +56,45 @@ test.describe('API Chaining Workflow', () => {
 
     const userId = createdUser.id;
 
-    // Step 2: Delete using the generated ID
+    expect(userId).toBeTruthy();
+
     const deleteResponse = await request.delete(`/api/users/${userId}`);
 
     expect(deleteResponse.status()).toBe(204);
   });
 
 
-  test('should retrieve a user and validate the returned user ID', async ({ request }) => {
+  test('should retrieve a user and use the returned ID in another request', async ({ request }) => {
 
-    // Step 1: Retrieve user
     const getResponse = await request.get('/api/users/2');
 
     expect(getResponse.status()).toBe(200);
 
     const userResponse = await getResponse.json();
 
+    expect(userResponse).toHaveProperty('data');
+    expect(userResponse.data).toHaveProperty('id');
+
     const userId = userResponse.data.id;
 
     expect(userId).toBe(2);
 
-    // Step 2: Use the retrieved ID in another request
     const secondResponse = await request.get(`/api/users/${userId}`);
 
     expect(secondResponse.status()).toBe(200);
 
     const secondUserResponse = await secondResponse.json();
 
+    expect(secondUserResponse).toHaveProperty('data');
     expect(secondUserResponse.data.id).toBe(userId);
   });
 
 
-  test('should create a user, update it, and then delete it', async ({ request }) => {
+  test('should create, update, and delete a user using the generated ID', async ({ request }) => {
 
-    // Step 1: Create
     const createResponse = await request.post('/api/users', {
       data: {
-        name: 'Chained User',
+        name: 'Chioma',
         job: 'QA Engineer'
       }
     });
@@ -102,11 +103,12 @@ test.describe('API Chaining Workflow', () => {
 
     const createdUser = await createResponse.json();
 
+    expect(createdUser).toHaveProperty('id');
+
     const userId = createdUser.id;
 
     expect(userId).toBeTruthy();
 
-    // Step 2: Update
     const updateResponse = await request.patch(`/api/users/${userId}`, {
       data: {
         job: 'Automation QA Engineer'
@@ -120,7 +122,6 @@ test.describe('API Chaining Workflow', () => {
     expect(updatedUser.job).toBe('Automation QA Engineer');
     expect(updatedUser).toHaveProperty('updatedAt');
 
-    // Step 3: Delete
     const deleteResponse = await request.delete(`/api/users/${userId}`);
 
     expect(deleteResponse.status()).toBe(204);

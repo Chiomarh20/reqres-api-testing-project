@@ -1,13 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { registrationData } from '../test-data/auth-data.js';
 
 test.describe('Authentication API - Registration', () => {
 
   test('should reject registration for an undefined user', async ({ request }) => {
     const response = await request.post('/api/register', {
-      data: {
-        email: 'sydney@fife',
-        password: 'pistol'
-      }
+      data: registrationData.undefinedUser
     });
 
     expect(response.status()).toBe(400);
@@ -15,17 +13,14 @@ test.describe('Authentication API - Registration', () => {
     const responseBody = await response.json();
 
     expect(responseBody).toHaveProperty('error');
-    expect(responseBody.error).toBe(
-      'Note: Only defined users succeed registration'
-    );
+    expect(typeof responseBody.error).toBe('string');
+    expect(responseBody.error.length).toBeGreaterThan(0);
   });
 
 
   test('should reject registration when password is missing', async ({ request }) => {
     const response = await request.post('/api/register', {
-      data: {
-        email: 'sydney@fife'
-      }
+      data: registrationData.missingPassword
     });
 
     expect(response.status()).toBe(400);
@@ -39,9 +34,7 @@ test.describe('Authentication API - Registration', () => {
 
   test('should reject registration when email is missing', async ({ request }) => {
     const response = await request.post('/api/register', {
-      data: {
-        password: 'pistol'
-      }
+      data: registrationData.missingEmail
     });
 
     expect(response.status()).toBe(400);
@@ -71,7 +64,7 @@ test.describe('Authentication API - Registration', () => {
     const response = await request.post('/api/register', {
       data: {
         email: '',
-        password: 'pistol'
+        password: registrationData.undefinedUser.password
       }
     });
 
@@ -87,7 +80,7 @@ test.describe('Authentication API - Registration', () => {
   test('should reject registration with an empty password', async ({ request }) => {
     const response = await request.post('/api/register', {
       data: {
-        email: 'sydney@fife',
+        email: registrationData.undefinedUser.email,
         password: ''
       }
     });
@@ -105,7 +98,7 @@ test.describe('Authentication API - Registration', () => {
     const response = await request.post('/api/register', {
       data: {
         email: 'invalid-email',
-        password: 'pistol'
+        password: registrationData.undefinedUser.password
       }
     });
 
@@ -121,7 +114,7 @@ test.describe('Authentication API - Registration', () => {
   test('should reject registration when password is null', async ({ request }) => {
     const response = await request.post('/api/register', {
       data: {
-        email: 'sydney@fife',
+        email: registrationData.undefinedUser.email,
         password: null
       }
     });

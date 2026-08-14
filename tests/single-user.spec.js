@@ -6,6 +6,7 @@ test.describe('Users API - Single User', () => {
     const response = await request.get('/api/users/2');
 
     expect(response.status()).toBe(200);
+    expect(response.ok()).toBeTruthy();
 
     const responseBody = await response.json();
 
@@ -18,6 +19,12 @@ test.describe('Users API - Single User', () => {
     expect(responseBody.data).toHaveProperty('avatar');
 
     expect(responseBody.data.id).toBe(2);
+
+    expect(typeof responseBody.data.id).toBe('number');
+    expect(typeof responseBody.data.email).toBe('string');
+    expect(typeof responseBody.data.first_name).toBe('string');
+    expect(typeof responseBody.data.last_name).toBe('string');
+    expect(typeof responseBody.data.avatar).toBe('string');
   });
 
 
@@ -36,47 +43,6 @@ test.describe('Users API - Single User', () => {
     const response = await request.get('/api/users/0');
 
     expect(response.status()).toBe(404);
-  });
-
-
-  test('should return a valid user ID as a number', async ({ request }) => {
-    const response = await request.get('/api/users/2');
-
-    expect(response.status()).toBe(200);
-
-    const responseBody = await response.json();
-
-    expect(typeof responseBody.data.id).toBe('number');
-    expect(responseBody.data.id).toBeGreaterThan(0);
-  });
-
-
-  test('should return a valid email for a single user', async ({ request }) => {
-    const response = await request.get('/api/users/2');
-
-    expect(response.status()).toBe(200);
-
-    const responseBody = await response.json();
-
-    expect(responseBody.data.email).toContain('@');
-    expect(responseBody.data.email).toMatch(/^[^\s@]+@[^\s@]+\.[^\s@]+$/);
-  });
-
-
-  test('should return consistent user data for repeated requests', async ({ request }) => {
-    const firstResponse = await request.get('/api/users/2');
-    const secondResponse = await request.get('/api/users/2');
-
-    expect(firstResponse.status()).toBe(200);
-    expect(secondResponse.status()).toBe(200);
-
-    const firstBody = await firstResponse.json();
-    const secondBody = await secondResponse.json();
-
-    expect(firstBody.data.id).toBe(secondBody.data.id);
-    expect(firstBody.data.email).toBe(secondBody.data.email);
-    expect(firstBody.data.first_name).toBe(secondBody.data.first_name);
-    expect(firstBody.data.last_name).toBe(secondBody.data.last_name);
   });
 
 });

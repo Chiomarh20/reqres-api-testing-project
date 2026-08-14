@@ -1,16 +1,21 @@
 export const userData = {
   createUser: {
-    name: 'Chioma',
+    name: 'Chioma Mary Patrick',
     job: 'QA Engineer'
   },
 
+  secondUser: {
+    name: 'Chioma Patrick',
+    job: 'Software Tester'
+  },
+
   updateUser: {
-    name: 'Chioma Updated',
+    name: 'Chioma Mary Patrick',
     job: 'Senior QA Engineer'
   },
 
   automationUser: {
-    name: 'Automation Tester',
+    name: 'Chioma Mary',
     job: 'QA Automation Engineer'
   }
 };

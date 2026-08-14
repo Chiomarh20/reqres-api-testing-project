@@ -17,18 +17,19 @@ Staging/Public API
 ReqRes API
 
 ## Test Execution Summary
-
 | Metric | Result |
 |---|---:|
-| Total Test Cases | 55 |
-| Passed | 55 |
+| Total Test Cases | 51 |
+| Passed | 51 |
 | Failed | 0 |
 | Pass Rate | 100% |
 | Execution Status | Passed |
+| Workers | 1 |
+| Execution Time | 18.1 seconds |
 
 ## Test Coverage
 
-### Users
+### Users API
 
 - Retrieve users list
 - Validate user collection
@@ -41,8 +42,6 @@ ReqRes API
 - Retrieve non-existent user
 - Boundary user IDs
 - Validate user ID
-- Validate email format
-- Validate response consistency
 
 ### Pagination
 
@@ -59,6 +58,7 @@ ReqRes API
 - Update users using PUT
 - Update users using PATCH
 - Delete users
+- Create users with additional fields
 - Boundary and validation scenarios
 
 ### Authentication
@@ -67,6 +67,7 @@ ReqRes API
 - Invalid login
 - Missing credentials
 - Empty credentials
+- Invalid email format
 - Registration validation
 - Invalid registration data
 
@@ -87,29 +88,31 @@ ReqRes API
 - Response schema
 - Authentication validation
 
-## Defects / Observations
+## API Observation
 
-One API behavior was documented during testing:
+One API behavior was documented during testing.
 
-`POST /api/register` returns HTTP 400 for the test user
-`sydney@fife` with the message:
+The `POST /api/register` endpoint returned HTTP 400 when tested with:
 
-`Note: Only defined users succeed registration`
+```text
+Email: sydney@fife
+Password: pistol
 
-This has been documented in:
+The API returned:
+{
+  "error": "Missing email or username"
+}
 
-`bug-reports/registration-api-observation.md`
-
-The observation requires clarification regarding the currently
-supported registration test data.
+This behavior has been documented in:
+bug-reports/registration-api-observation.md
+The observation has been retained as part of the API testing documentation.
 
 ## Conclusion
-
-The Playwright API test suite successfully executed 55 automated
+The Playwright API test suite successfully executed 51 automated
 test cases with a 100% pass rate.
-
 The suite covers positive, negative, boundary, validation,
 authentication, pagination, CRUD, response/schema validation,
 and API chaining scenarios.
-
+The test suite was executed with a single worker to avoid
+rate-limit responses from the public ReqRes API.
 The project is ready for final repository review and submission.

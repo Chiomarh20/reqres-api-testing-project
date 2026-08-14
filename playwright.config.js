@@ -7,7 +7,8 @@ dotenv.config();
 export default defineConfig({
   testDir: './tests',
 
-  fullyParallel: true,
+  fullyParallel: false,
+  workers: 1,
 
   reporter: 'html',
 
@@ -16,8 +17,7 @@ export default defineConfig({
 
     extraHTTPHeaders: {
       'x-api-key': process.env.REQRES_API_KEY || '',
+      'User-Agent': 'reqres-qa-tests/1.0',
     },
-
-    trace: 'on-first-retry',
   },
 });

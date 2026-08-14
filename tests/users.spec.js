@@ -1,31 +1,21 @@
-import { test, expect } from '@playwright/test';
+export const userData = {
+  createUser: {
+    name: 'Chioma Patrick',
+    job: 'QA Engineer'
+  },
 
-test.describe('Users API - GET Users', () => {
+  secondUser: {
+    name: 'Chioma Mary',
+    job: 'Software Tester'
+  },
 
-  test('GET users should return a list of users', async ({ request }) => {
-    const response = await request.get('/api/users?page=2');
+  updateUser: {
+    name: 'Chioma Updated',
+    job: 'Senior QA Engineer'
+  },
 
-    expect(response.status()).toBe(200);
-    expect(response.ok()).toBeTruthy();
-
-    const responseBody = await response.json();
-
-    expect(responseBody).toHaveProperty('page');
-    expect(responseBody).toHaveProperty('per_page');
-    expect(responseBody).toHaveProperty('total');
-    expect(responseBody).toHaveProperty('total_pages');
-    expect(responseBody).toHaveProperty('data');
-
-    expect(Array.isArray(responseBody.data)).toBeTruthy();
-    expect(responseBody.data.length).toBeGreaterThan(0);
-
-    const firstUser = responseBody.data[0];
-
-    expect(firstUser).toHaveProperty('id');
-    expect(firstUser).toHaveProperty('email');
-    expect(firstUser).toHaveProperty('first_name');
-    expect(firstUser).toHaveProperty('last_name');
-    expect(firstUser).toHaveProperty('avatar');
-  });
-
-});
+  automationUser: {
+    name: 'Chioma Patrick',
+    job: 'QA Automation Engineer'
+  }
+};

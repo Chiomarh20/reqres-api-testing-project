@@ -1,13 +1,19 @@
 {
   "name": "reqres-api-testing-project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Automated API testing project for the ReqRes API using Playwright and JavaScript",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:report": "playwright show-report"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "api-testing",
+    "playwright",
+    "javascript",
+    "qa",
+    "reqres"
+  ],
+  "author": "Chioma Mary Patrick",
   "license": "ISC",
   "type": "module",
   "devDependencies": {
